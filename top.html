@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HopeSeed - クラウドファンディングで未来を育てる</title>
+    <style>
+        :root {
+            --primary-color: #4caf50;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --accent-color: #ff9800;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            background-color: #fff;
+            padding-bottom: 80px;
+        }
+
+        header {
+            background: #fff;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* カルーセル */
+        .slider-section {
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-container {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            gap: 20px;
+        }
+
+        .dummy-project {
+            min-width: calc(33.333% - 14px);
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 768px) {
+            .dummy-project { min-width: calc(100% - 0px); }
+        }
+
+        .project-image-placeholder {
+            width: 100%;
+            height: 120px;
+            background: #eee;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.8);
+            border: 1px solid #ddd;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-btn.prev { left: 0; }
+        .carousel-btn.next { right: 0; }
+
+        /* メイン案件リスト */
+        .project-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .project-card {
+            border: 1px solid #eee;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 200px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .project-content {
+            padding: 15px;
+        }
+
+        .project-tag {
+            font-size: 12px;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .project-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            height: 50px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin: 15px 0 5px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .project-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .supporter-count {
+            font-size: 13px;
+            color: #888;
+            text-align: right;
+            display: block;
+        }
+
+        /* 広告ボタン */
+        .ad-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #333;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .ad-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* フッター */
+        footer {
+            margin-top: 50px;
+            padding: 40px 20px;
+            background: #f9f9f9;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-links a {
+            margin: 0 10px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        /* ポップアップ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal button {
+            margin-top: 20px;
+            padding: 8px 20px;
+            background: #eee;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">HopeSeed</a>
+    </header>
+
+    <section class="hero">
+        <h1>希望の種を育てる</h1>
+        <p>あなたの支援が、誰かの新しい明日を作ります。</p>
+    </section>
+
+    <div class="container">
+        <!-- カルーセルスライダー -->
+        <section class="slider-section">
+            <button class="carousel-btn prev" onclick="moveCarousel(-1)">&#10094;</button>
+            <div class="carousel-container" id="carousel">
+                <div class="dummy-project">
+                    <div class="project-image-placeholder">
+                        <img src="./photo/project_1.png" alt="和菓子屋" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
+                    </div>
+                    <div>街の伝統的な和菓子屋を守りたい</div>
+                </div>
+                <div class="dummy-project">
+                    <div class="project-image-placeholder">
+                        <img src="./photo/project_2.png" alt="アーティスト" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
+                    </div>
+                    <div>若手アーティストの海外展覧会</div>
+                </div>
+                <div class="dummy-project">
+                    <div class="project-image-placeholder">
+                        <img src="./photo/project_3.png" alt="保護猫" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
+                    </div>
+                    <div>地域猫のための保護シェルター</div>
+                </div>
+                <div class="dummy-project">
+                    <div class="project-image-placeholder">
+                        <img src="./photo/project_4.png" alt="サッカー" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
+                    </div>
+                    <div>地元の少年サッカーチーム遠征費</div>
+                </div>
+                <div class="dummy-project">
+                    <div class="project-image-placeholder">
+                        <img src="./photo/project_5.png" alt="植樹" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
+                    </div>
+                    <div>植樹活動で森を再生したい</div>
+                </div>
+            </div>
+            <button class="carousel-btn next" onclick="moveCarousel(1)">&#10095;</button>
+        </section>
+
+        <!-- メイン案件 -->
+        <h2>注目のプロジェクト</h2>
+        <div class="project-list">
+            <!-- 案件A -->
+            <a href="project-a.html" class="project-card">
+                <div class="project-image" style="background-color: #fce4ec;">👨‍👩‍👧</div>
+                <div class="project-content">
+                    <div class="project-tag">教育・夢</div>
+                    <div class="project-title">娘の夢のための支援をお願いします。</div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 85%;"></div></div>
+                    <div class="project-stats">
+                        <span>現在 ¥851,000</span>
+                        <span>85%</span>
+                    </div>
+                    <span class="supporter-count">支援者 242人</span>
+                </div>
+            </a>
+
+            <!-- 案件B -->
+            <div class="project-card" onclick="showPopup('募集を中止いたしました。')">
+                <div class="project-image" style="background-color: #e3f2fd;">
+                    <img src="./photo/project_B.png" alt="保護動物" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="project-content">
+                    <div class="project-tag">動物保護</div>
+                    <div class="project-title">多くの保護動物を救いたい</div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div>
+                    <div class="project-stats">
+                        <span>現在 ¥2,400,000</span>
+                        <span>100%</span>
+                    </div>
+                    <span class="supporter-count">支援者 412人</span>
+                </div>
+            </div>
+
+            <!-- 案件C -->
+            <div class="project-card" onclick="showPopup('利用規約に反するため、募集を中止いたしました。')">
+                <div class="project-image" style="background-color: #fff3e0;">
+                    <img src="./photo/project_C.png" alt="廃校再生プロジェクト" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="project-content">
+                    <div class="project-tag">地域活性化</div>
+                    <div class="project-title">廃校再生プロジェクト！廃校を次世代型&quot;共振&quot;施設へ！</div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 112%; background-color: var(--accent-color);"></div></div>
+                    <div class="project-stats">
+                        <span>現在 ¥5,600,000</span>
+                        <span>112%</span>
+                    </div>
+                    <span class="supporter-count">支援者 894人</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="about.html">HopeSeedとは(会社概要)</a>
+            <a href="contact.html">お問い合わせ</a>
+            <a href="#">利用規約</a>
+            <a href="#">プライバシーポリシー</a>
+        </div>
+        <p>&copy; 2026 HopeSeed Inc.</p>
+    </footer>
+
+    <!-- 広告ボタン & 通貨 -->
+    <div class="ad-footer">
+        <div class="wallet">所持金: <span id="money-display">¥0</span></div>
+        <button class="ad-button" onclick="watchAd()">[広告を見る] (+¥1,000)</button>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal">
+            <p id="modal-message"></p>
+            <button onclick="hidePopup()">閉じる</button>
+        </div>
+    </div>
+
+    <script>
+        // 通貨機能
+        let money = parseInt(localStorage.getItem('hopeSeedMoney')) || 0;
+        updateMoneyDisplay();
+
+        function watchAd() {
+            money += 1000;
+            localStorage.setItem('hopeSeedMoney', money);
+            updateMoneyDisplay();
+            // ポップアップを削除
+        }
+
+        function updateMoneyDisplay() {
+            document.getElementById('money-display').textContent = '¥' + money.toLocaleString();
+        }
+
+        // カルーセル機能
+        let currentIdx = 0;
+        const carousel = document.getElementById('carousel');
+        function moveCarousel(dir) {
+            const items = document.querySelectorAll('.dummy-project');
+            const total = items.length;
+            const perView = window.innerWidth > 768 ? 3 : 1;
+            currentIdx += dir;
+            if (currentIdx < 0) currentIdx = total - perView;
+            if (currentIdx > total - perView) currentIdx = 0;
+            const offset = currentIdx * (100 / perView + (perView > 1 ? 2 : 0)); 
+            carousel.style.transform = `translateX(-${currentIdx * (items[0].offsetWidth + 20)}px)`;
+        }
+
+        // ポップアップ機能
+        function showPopup(message) {
+            document.getElementById('modal-message').textContent = message;
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
+        function hidePopup() {
+            document.getElementById('modal-overlay').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
