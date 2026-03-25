@@ -71,6 +71,11 @@
             color: #000;
         }
 
+        .message a {
+            color: #1e88e5;
+            text-decoration: underline;
+        }
+
         #input-area {
             background-color: var(--input-bg);
             padding: 10px;
@@ -108,10 +113,7 @@
 
 <div id="chat-container">
     <header>春風まとい 🌸</header>
-    
-    <div id="messages">
-        <div class="message other">ヤッホー！春風まといだよ！🌸<br>HopeSeedっていうサイトについて調べてほしいんだけど、手伝ってくれるかな？</div>
-    </div>
+    <div id="messages"></div>
 
     <form id="input-area">
         <input type="text" id="message-input" placeholder="メッセージを入力..." autocomplete="off">
@@ -124,32 +126,53 @@
     const messageInput = document.getElementById('message-input');
     const inputArea = document.getElementById('input-area');
 
+    // セクション管理 (localStorageで保存)
+    let currentSection = parseInt(localStorage.getItem('matoiSection')) || 0;
+
+    function saveSection(section) {
+        currentSection = section;
+        localStorage.setItem('matoiSection', section);
+    }
+
     function addMessage(text, type) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${type}`;
+        // 改行を<br>に、URLはそのままタグとして扱えるようにinnerHTMLを使用
         msgDiv.innerHTML = text.replace(/\n/g, '<br>');
         messagesContainer.appendChild(msgDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    function handleResponse(userText) {
-        let response = "";
-        
-        if (userText.includes("いいよ") || userText.includes("了解") || userText.includes("OK")) {
-            response = "やったー！ありがとー！✨\n早速、サイトの中に怪しいところがないかチェックしてみて！\nここだよ！👇\nhttps://yuda-6666.github.io/arg-site/top.html";
-        } else if (userText.includes("誰") || userText.includes("名前")) {
-            response = "さっきも言ったけど、春風まといだよ！\n好奇心旺盛な17歳…ってことでよろしくね！😋";
-        } else if (userText.includes("怪しい") || userText.includes("サイト") || userText.includes("HopeSeed")) {
-            response = "なんだかあのサイト、不自然なプロジェクトが多い気がするんだよね…。\nこれ、見てみて！\nhttps://yuda-6666.github.io/arg-site/top.html\n特に一番上の『娘の夢』とか書いてあるやつ、ちょっと気にならない？";
-        } else if (userText.includes("わかった") || userText.includes("任せて")) {
-            response = "頼もしいなー！期待してるよ！\n何か見つけたらすぐ教えてね！待ってるから！";
-        } else {
-            response = "あはは、面白いこと言うね！\nそれより、HopeSeedの調査のほうはどうかな？";
-        }
+    // 初期メッセージ (セクション0のみ)
+    if (currentSection === 0) {
+        setTimeout(() => addMessage("……すみません、見えてますか？", "other"), 1000);
+        setTimeout(() => addMessage("HopeSeedの調査を手伝ってくれる方ですよね！？", "other"), 2000);
+        setTimeout(() => addMessage("見えてたら何か返信くれますか！？", "other"), 3000);
+    } else {
+        // すでに進んでいる場合は挨拶のみ表示
+        addMessage("あ、おかえりなさい！✨\nHopeSeedの調査、どうかな？", "other");
+    }
 
-        setTimeout(() => {
-            addMessage(response, 'other');
-        }, 1200);
+    function handleResponse(userText) {
+        if (currentSection === 0) {
+            // 初めての返信でセクション1へ
+            saveSection(1);
+            setTimeout(() => addMessage("私、春風まといって言います！", "other"), 1000);
+            setTimeout(() => addMessage("もう聞いてるかもなんですが、とあるクラウドファンディングサイトの調査をしてほしくて！", "other"), 2000);
+            setTimeout(() => addMessage("これサイトのURLです！！", "other"), 3000);
+            setTimeout(() => addMessage('<a href="https://yuda-6666.github.io/arg-site/top.html" target="_blank">https://yuda-6666.github.io/arg-site/top.html</a>', "other"), 4000);
+        } else {
+            // セクション1以降の通常応答
+            let response = "";
+            if (userText.includes("誰") || userText.includes("名前")) {
+                response = "春風まといだよ！好奇心旺盛な17歳😋\nサイトの調査、手伝ってくれて本当にありがとうね！";
+            } else if (userText.includes("怪しい") || userText.includes("サイト") || userText.includes("HopeSeed")) {
+                response = "あのサイト、絶対何か隠してると思うんだよね…。\n特に『娘の夢』のプロジェクト、支援者のコメント欄とかもチェックしてみて！";
+            } else {
+                response = "あはは、面白いこと言うね！✨\n何か不自然なところを見つけたら、すぐに教えてほしいな！";
+            }
+            setTimeout(() => addMessage(response, 'other'), 1000);
+        }
     }
 
     inputArea.addEventListener('submit', (e) => {
