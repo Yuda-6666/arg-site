@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>娘の夢のための支援をお願いします。 - HopeSeed</title>
+    <style>
+        :root {
+            --primary-color: #4caf50;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --accent-color: #ff9800;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            background-color: #fff;
+            padding-bottom: 80px;
+        }
+
+        header {
+            background: #fff;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .project-header {
+            margin-bottom: 30px;
+        }
+
+        .project-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .project-main-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .project-main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .project-visual {
+            width: 100%;
+            height: 400px;
+            background-color: #fce4ec;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+        }
+
+        /* サイドバー */
+        .sidebar {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            position: sticky;
+            top: 20px;
+        }
+
+        .stat-box {
+            margin-bottom: 20px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .stat-value small {
+            font-size: 16px;
+            font-weight: normal;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 5px;
+            width: 85%;
+        }
+
+        .support-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: var(--accent-color);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        /* タブ */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #eee;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: -2px;
+        }
+
+        .tab-content {
+            display: none;
+            line-height: 1.8;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* リターン */
+        .return-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .return-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        /* 活動報告 */
+        .update-item {
+            border-bottom: 1px solid #eee;
+            padding: 20px 0;
+        }
+
+        .update-date {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .update-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 5px 0 10px;
+        }
+
+        /* コメント */
+        .comment-item {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+        }
+
+        .comment-meta {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .comment-text {
+            font-size: 15px;
+        }
+
+        .suspicious {
+            color: #555;
+            background: #f0f0f0;
+            padding: 10px;
+            border-left: 3px solid #ccc;
+        }
+
+        /* 共通フッター広告 */
+        .ad-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #333;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .ad-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .wallet {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">HopeSeed</a>
+        <div>所持金: <span id="header-money">¥0</span></div>
+    </header>
+
+    <div class="container">
+        <div class="project-header">
+            <h1 class="project-title">娘の夢のための支援をお願いします。</h1>
+            <div class="project-main-layout">
+                <div class="project-visual">👨‍👩‍👧</div>
+                <div class="sidebar">
+                    <div class="stat-box">
+                        <div class="stat-label">現在の支援総額</div>
+                        <div class="stat-value">¥851,000</div>
+                        <div class="progress-bar"><div class="progress-fill"></div></div>
+                        <div class="stat-label">目標金額: ¥1,000,000 (85%)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">支援者数</div>
+                        <div class="stat-value">242<small>人</small></div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">残り日数</div>
+                        <div class="stat-value">12<small>日</small></div>
+                    </div>
+                    <button class="support-btn" onclick="alert('支援するにはログインが必要です。')">このプロジェクトを支援する</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="openTab(event, 'overview')">概要</div>
+            <div class="tab" onclick="openTab(event, 'returns')">リターン</div>
+            <div class="tab" onclick="openTab(event, 'updates')">活動報告 (3)</div>
+            <div class="tab" onclick="openTab(event, 'comments')">応援コメント (20)</div>
+        </div>
+
+        <!-- 概要 -->
+        <div id="overview" class="tab-content active">
+            <p>はじめまして。私は都内で8人家族（妻、子供6人）の父親をしております工藤と申します。</p>
+            <p>この度、長女である<strong>工藤 結衣（くどう ゆい）</strong>が、かねてからの夢であった服飾の道に進むため、<strong>聖マリア服飾専門学院</strong>への入学を希望しております。</p>
+            <p>しかし、恥ずかしながら大家族ということもあり、日々の生活で精一杯で、彼女の夢を後押しするための学費を全額用意することが難しい状況です。</p>
+            <p>結衣は幼い頃から妹たちの服を繕ったり、自作の衣装を作ったりと、本当に才能に溢れた優しい子です。親として、どうしても彼女の可能性を潰したくない。その一心で、このプロジェクトを立ち上げました。</p>
+            <p>皆様の温かいご支援を、何卒よろしくお願い申し上げます。</p>
+            <hr>
+            <p><strong>【資金の使い道】</strong><br>
+            ・聖マリア服飾専門学院 入学金および前期授業料：約80万円<br>
+            ・教材費（ミシン、生地代等）：約20万円</p>
+        </div>
+
+        <!-- リターン -->
+        <div id="returns" class="tab-content">
+            <div class="return-card">
+                <div class="return-price">¥1,000</div>
+                <div class="return-title">感謝のメッセージ</div>
+                <p>工藤結衣本人より、心を込めた感謝のメールをお送りします。</p>
+                <button class="support-btn" style="padding: 8px; font-size: 14px;">このリターンを選択する</button>
+            </div>
+            <div class="return-card">
+                <div class="return-price">¥5,000</div>
+                <div class="return-title">家族写真</div>
+                <p>私たち工藤家8人全員が揃った、温かい家族写真のデータをお送りします。</p>
+                <button class="support-btn" style="padding: 8px; font-size: 14px;">このリターンを選択する</button>
+            </div>
+            <div class="return-card">
+                <div class="return-price">¥10,000</div>
+                <div class="return-title">娘と直接お話できます</div>
+                <p>オンライン(Zoom)にて、娘の結衣が直接感謝の気持ちを伝え、夢について30分ほどお話しさせていただきます。</p>
+                <button class="support-btn" style="padding: 8px; font-size: 14px;">このリターンを選択する</button>
+            </div>
+        </div>
+
+        <!-- 活動報告 -->
+        <div id="updates" class="tab-content">
+            <div class="update-item">
+                <div class="update-date">2026年3月15日</div>
+                <div class="update-title">皆様のおかげで入学金が払えそうです</div>
+                <p>本当に、本当にありがとうございます！皆様の温かいご支援のおかげで、目標金額の80%を突破しました。これで結衣も安心して学校に通うことができそうです。昨日は家族全員で、支援者の皆様への感謝を込めてお祝いをしました。</p>
+            </div>
+            <div class="update-item">
+                <div class="update-date">2026年3月10日</div>
+                <div class="update-title">娘が熱心にミシンに向かっています</div>
+                <p>結衣は今、支援してくださった方へのプレゼント用にと、余った布で小物を作っています。毎日遅くまでミシンの音がリビングに響いていますが、父親としてはその姿を見るだけで目頭が熱くなります。</p>
+            </div>
+            <div class="update-item">
+                <div class="update-date">2026年3月1日</div>
+                <div class="update-title">寄付よろしくお願いします</div>
+                <p>本日よりプロジェクトを開始いたしました！私たちの切実な願いが、誰かに届くことを祈っております。娘の未来のために、どうかお力をお貸しください。</p>
+            </div>
+        </div>
+
+        <!-- 応援コメント -->
+        <div id="comments" class="tab-content">
+            <div class="comment-item">
+                <div class="comment-meta">支援者：匿名希望 | ¥10,000 | 2時間前</div>
+                <div class="comment-text">結衣さんの夢、心から応援しています！頑張ってください！</div>
+            </div>
+            <div class="comment-item">
+                <div class="comment-meta">支援者：佐藤 | ¥5,000 | 5時間前</div>
+                <div class="comment-text">8人家族は大変でしょうが、素敵なご家族ですね。応援しています。</div>
+            </div>
+            <div class="comment-item">
+                <div class="comment-meta">支援者：田中 | ¥1,000 | 1日前</div>
+                <div class="comment-text">少額ですが足しにしてください。</div>
+            </div>
+            <!-- ... 繰り返し ... -->
+            <div class="comment-item suspicious">
+                <div class="comment-meta">支援者：通りすがり | ¥1,000 | 1日前</div>
+                <div class="comment-text">「聖マリア服飾専門学院」って、去年閉校していませんでしたか？勘違いならすみません。</div>
+            </div>
+            <div class="comment-item">
+                <div class="comment-meta">支援者：匿名希望 | ¥3,000 | 2日前</div>
+                <div class="comment-text">頑張っている子供を応援したい。ただそれだけです！</div>
+            </div>
+            <div class="comment-item suspicious">
+                <div class="comment-meta">支援者：近隣住人 | ¥1,000 | 2日前</div>
+                <div class="comment-text">工藤さんのお宅、いつも静かですが本当に6人もお子さんいらっしゃるんですか？</div>
+            </div>
+            <div class="comment-item">
+                <div class="comment-meta">支援者：yumi | ¥5,000 | 3日前</div>
+                <div class="comment-text">素敵な写真楽しみにしてます！</div>
+            </div>
+            <!-- 以下略 (計20件程度) -->
+            <div id="more-comments"></div>
+        </div>
+    </div>
+
+    <!-- 広告ボタン & 通貨 -->
+    <div class="ad-footer">
+        <div class="wallet">所持金: <span id="money-display">¥0</span></div>
+        <button class="ad-button" onclick="watchAd()">[広告を見る] (+¥1,000)</button>
+    </div>
+
+    <script>
+        // 通貨機能
+        let money = parseInt(localStorage.getItem('hopeSeedMoney')) || 0;
+        updateMoneyDisplay();
+
+        function watchAd() {
+            money += 1000;
+            localStorage.setItem('hopeSeedMoney', money);
+            updateMoneyDisplay();
+        }
+
+        function updateMoneyDisplay() {
+            document.getElementById('money-display').textContent = '¥' + money.toLocaleString();
+            document.getElementById('header-money').textContent = '¥' + money.toLocaleString();
+        }
+
+        // タブ切り替え
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.className += " active";
+        }
+
+        // ダミーコメント生成
+        const moreComments = document.getElementById('more-comments');
+        const genericComments = [
+            "頑張ってください！", "応援しています。", "素敵なプロジェクトですね。", 
+            "娘さんの夢が叶いますように。", "微力ながら支援させていただきました。",
+            "大家族、尊敬します！", "素晴らしいお父様ですね。"
+        ];
+        for(let i=0; i<13; i++) {
+            const div = document.createElement('div');
+            div.className = 'comment-item';
+            div.innerHTML = `
+                <div class="comment-meta">支援者：匿名希望 | ¥1,000 | ${i+3}日前</div>
+                <div class="comment-text">${genericComments[i % genericComments.length]}</div>
+            `;
+            moreComments.appendChild(div);
+        }
+    </script>
+</body>
+</html>

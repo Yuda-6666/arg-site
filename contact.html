@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お問い合わせ - HopeSeed</title>
+    <style>
+        :root {
+            --primary-color: #4caf50;
+            --text-color: #333;
+        }
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            padding-bottom: 80px;
+        }
+        header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        h1 {
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 150px;
+        }
+        .submit-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .ad-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #333;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .ad-button {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">HopeSeed</a>
+    </header>
+
+    <div class="container">
+        <h1>お問い合わせ</h1>
+        <p>サービスに関するご質問や、不審なプロジェクトの報告はこちらからお願いいたします。</p>
+
+        <form onsubmit="event.preventDefault(); alert('お問い合わせを送信しました。');">
+            <div class="form-group">
+                <label for="type">お問い合わせ種別</label>
+                <select id="type">
+                    <option>サービスについて</option>
+                    <option>プロジェクトの起案について</option>
+                    <option>不適切なプロジェクトの通報</option>
+                    <option>その他</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="name">お名前</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">メールアドレス</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="message">内容</label>
+                <textarea id="message" required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">送信する</button>
+        </form>
+    </div>
+
+    <!-- 広告ボタン & 通貨 -->
+    <div class="ad-footer">
+        <div class="wallet">所持金: <span id="money-display">¥0</span></div>
+        <button class="ad-button" onclick="watchAd()">[広告を見る] (+¥1,000)</button>
+    </div>
+
+    <script>
+        let money = parseInt(localStorage.getItem('hopeSeedMoney')) || 0;
+        document.getElementById('money-display').textContent = '¥' + money.toLocaleString();
+
+        function watchAd() {
+            money += 1000;
+            localStorage.setItem('hopeSeedMoney', money);
+            document.getElementById('money-display').textContent = '¥' + money.toLocaleString();
+        }
+    </script>
+</body>
+</html>
