@@ -126,43 +126,48 @@
     const messageInput = document.getElementById('message-input');
     const inputArea = document.getElementById('input-area');
 
-    // セクション管理 (localStorageで保存)
+    // セクションと履歴の管理
     let currentSection = parseInt(localStorage.getItem('matoiSection')) || 0;
+    let chatHistory = JSON.parse(localStorage.getItem('matoiChatHistory')) || [];
 
     function saveSection(section) {
         currentSection = section;
         localStorage.setItem('matoiSection', section);
     }
 
-    function addMessage(text, type) {
+    function addMessage(text, type, shouldSave = true) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${type}`;
-        // 改行を<br>に、URLはそのままタグとして扱えるようにinnerHTMLを使用
         msgDiv.innerHTML = text.replace(/\n/g, '<br>');
         messagesContainer.appendChild(msgDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        if (shouldSave) {
+            chatHistory.push({ text, type });
+            localStorage.setItem('matoiChatHistory', JSON.stringify(chatHistory));
+        }
     }
 
-    // 初期メッセージ (セクション0のみ)
-    if (currentSection === 0) {
-        setTimeout(() => addMessage("……すみません、見えてますか？", "other"), 1000);
-        setTimeout(() => addMessage("HopeSeedの調査を手伝ってくれる方ですよね！？", "other"), 2000);
-        setTimeout(() => addMessage("見えてたら何か返信くれますか！？", "other"), 3000);
-    } else {
-        // すでに進んでいる場合は挨拶のみ表示
-        addMessage("あ、おかえりなさい！✨\nHopeSeedの調査、どうかな？", "other");
-    }
+    // 履歴の読み込み
+    window.onload = () => {
+        if (chatHistory.length > 0) {
+            chatHistory.forEach(msg => addMessage(msg.text, msg.type, false));
+        } else if (currentSection === 0) {
+            // 履歴がなく、セクション0の場合のみ初期演出
+            setTimeout(() => addMessage("……すみません、見えてますか？", "other"), 1000);
+            setTimeout(() => addMessage("HopeSeedの調査を手伝ってくれる方ですよね！？", "other"), 2000);
+            setTimeout(() => addMessage("見えてたら何か返信くれますか！？", "other"), 3000);
+        }
+    };
 
     function handleResponse(userText) {
         if (currentSection === 0) {
-            // 初めての返信でセクション1へ
             saveSection(1);
             setTimeout(() => addMessage("私、春風まといって言います！", "other"), 1000);
             setTimeout(() => addMessage("もう聞いてるかもなんですが、とあるクラウドファンディングサイトの調査をしてほしくて！", "other"), 2000);
             setTimeout(() => addMessage("これサイトのURLです！！", "other"), 3000);
             setTimeout(() => addMessage('<a href="https://yuda-6666.github.io/arg-site/top.html" target="_blank">https://yuda-6666.github.io/arg-site/top.html</a>', "other"), 4000);
         } else {
-            // セクション1以降の通常応答
             let response = "";
             if (userText.includes("誰") || userText.includes("名前")) {
                 response = "春風まといだよ！好奇心旺盛な17歳😋\nサイトの調査、手伝ってくれて本当にありがとうね！";
@@ -182,7 +187,6 @@
 
         addMessage(text, 'mine');
         messageInput.value = "";
-
         handleResponse(text);
     });
 </script>
