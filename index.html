@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HopeSeed - Chat with Matoi</title>
+    <title>HopeSeed - Chat</title>
     <style>
         :root {
             --chat-bg: #7494c0;
@@ -11,6 +11,8 @@
             --other-bubble: #ffffff;
             --input-bg: #ffffff;
             --header-bg: #35495e;
+            --menu-bg: #2c3e50;
+            --notification-color: #ff3b30;
         }
 
         body, html {
@@ -18,6 +20,7 @@
             padding: 0;
             height: 100%;
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            overflow: hidden;
         }
 
         #chat-container {
@@ -31,11 +34,134 @@
             background-color: var(--header-bg);
             color: white;
             padding: 15px;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
             font-size: 1.1em;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             z-index: 10;
+            position: relative;
+        }
+
+        #menu-btn {
+            position: absolute;
+            left: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 12px;
+            height: 12px;
+            background-color: var(--notification-color);
+            border-radius: 50%;
+            border: 2px solid var(--header-bg);
+            display: none;
+        }
+
+        .badge.show {
+            display: block;
+        }
+
+        /* サイドメニュー */
+        #side-menu {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background-color: var(--menu-bg);
+            color: white;
+            z-index: 100;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+            padding: 20px 0;
+        }
+
+        #side-menu.open {
+            left: 0;
+        }
+
+        .menu-title {
+            padding: 0 20px 20px;
+            font-size: 1.2em;
+            border-bottom: 1px solid #455a64;
+            margin-bottom: 10px;
+        }
+
+        .contact-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .contact-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: background 0.2s;
+            position: relative;
+        }
+
+        .contact-item:hover {
+            background-color: #3e4f5f;
+        }
+
+        .contact-item.active {
+            background-color: #4caf50;
+        }
+
+        .contact-avatar {
+            width: 40px;
+            height: 40px;
+            background: #eee;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .item-badge {
+            position: absolute;
+            right: 20px;
+            background: var(--notification-color);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .item-badge.show {
+            display: block;
+        }
+
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 90;
+            display: none;
+        }
+
+        #overlay.show {
+            display: block;
         }
 
         #messages {
@@ -111,8 +237,23 @@
 </head>
 <body>
 
+<div id="side-menu">
+    <div class="menu-title">トーク一覧</div>
+    <div class="contact-list" id="contact-list">
+        <!-- JSで生成 -->
+    </div>
+</div>
+
+<div id="overlay" onclick="closeMenu()"></div>
+
 <div id="chat-container">
-    <header>春風まとい 🌸</header>
+    <header>
+        <button id="menu-btn" onclick="openMenu()">
+            ☰
+            <div id="main-badge" class="badge"></div>
+        </button>
+        <span id="chat-title">春風まとい 🌸</span>
+    </header>
     <div id="messages"></div>
 
     <form id="input-area">
@@ -125,58 +266,160 @@
     const messagesContainer = document.getElementById('messages');
     const messageInput = document.getElementById('message-input');
     const inputArea = document.getElementById('input-area');
+    const sideMenu = document.getElementById('side-menu');
+    const overlay = document.getElementById('overlay');
+    const chatTitle = document.getElementById('chat-title');
+    const contactList = document.getElementById('contact-list');
+    const mainBadge = document.getElementById('main-badge');
 
-    // セクションと履歴の管理
-    let currentSection = parseInt(localStorage.getItem('matoiSection')) || 0;
-    let chatHistory = JSON.parse(localStorage.getItem('matoiChatHistory')) || [];
+    // チャット相手の設定
+    let activeContact = 'matoi';
+    const contacts = {
+        matoi: { name: '春風まとい 🌸', avatar: '🌸', storageKey: 'matoiChatHistory' },
+        admin: { name: 'HopeSeed運営', avatar: '🌱', storageKey: 'adminChatHistory' }
+    };
 
-    function saveSection(section) {
-        currentSection = section;
-        localStorage.setItem('matoiSection', section);
+    function openMenu() {
+        sideMenu.classList.add('open');
+        overlay.classList.add('show');
+        renderContactList();
     }
 
-    function addMessage(text, type, shouldSave = true) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `message ${type}`;
-        msgDiv.innerHTML = text.replace(/\n/g, '<br>');
-        messagesContainer.appendChild(msgDiv);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    function closeMenu() {
+        sideMenu.classList.remove('open');
+        overlay.classList.remove('show');
+    }
+
+    function switchContact(id) {
+        activeContact = id;
+        chatTitle.textContent = contacts[id].name;
+        
+        // 通知バッジを消す
+        localStorage.setItem(`unread_${id}`, 'false');
+        updateBadgeVisibility();
+        
+        loadChat();
+        closeMenu();
+    }
+
+    function renderContactList() {
+        contactList.innerHTML = '';
+        const hasBought = localStorage.getItem('hasBoughtReturnA') === 'true';
+        
+        Object.keys(contacts).forEach(id => {
+            if (id === 'admin' && !hasBought) return;
+
+            const isUnread = localStorage.getItem(`unread_${id}`) === 'true';
+            const item = document.createElement('div');
+            item.className = `contact-item ${id === activeContact ? 'active' : ''}`;
+            item.onclick = () => switchContact(id);
+            item.innerHTML = `
+                <div class="contact-avatar">${contacts[id].avatar}</div>
+                <div>
+                    <div style="font-weight: bold;">${contacts[id].name}</div>
+                </div>
+                <div class="item-badge ${isUnread ? 'show' : ''}">N</div>
+            `;
+            contactList.appendChild(item);
+        });
+    }
+
+    function updateBadgeVisibility() {
+        const hasUnreadMatoi = localStorage.getItem('unread_matoi') === 'true';
+        const hasUnreadAdmin = localStorage.getItem('unread_admin') === 'true';
+        if ((hasUnreadMatoi && activeContact !== 'matoi') || (hasUnreadAdmin && activeContact !== 'admin')) {
+            mainBadge.classList.add('show');
+        } else {
+            mainBadge.classList.remove('show');
+        }
+    }
+
+    function addMessage(text, type, contactId = activeContact, shouldSave = true) {
+        if (contactId === activeContact) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${type}`;
+            msgDiv.innerHTML = text.replace(/\n/g, '<br>');
+            messagesContainer.appendChild(msgDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        } else if (type === 'other') {
+            // バックグラウンドで受信した場合、未読フラグを立てる
+            localStorage.setItem(`unread_${contactId}`, 'true');
+            updateBadgeVisibility();
+        }
 
         if (shouldSave) {
-            chatHistory.push({ text, type });
-            localStorage.setItem('matoiChatHistory', JSON.stringify(chatHistory));
+            let history = JSON.parse(localStorage.getItem(contacts[contactId].storageKey)) || [];
+            history.push({ text, type });
+            localStorage.setItem(contacts[contactId].storageKey, JSON.stringify(history));
         }
     }
 
-    // 履歴の読み込み
-    window.onload = () => {
-        if (chatHistory.length > 0) {
-            chatHistory.forEach(msg => addMessage(msg.text, msg.type, false));
-        } else if (currentSection === 0) {
-            // 履歴がなく、セクション0の場合のみ初期演出
-            setTimeout(() => addMessage("……すみません、見えてますか？", "other"), 1000);
-            setTimeout(() => addMessage("HopeSeedの調査を手伝ってくれる方ですよね！？", "other"), 2000);
-            setTimeout(() => addMessage("見えてたら何か返信くれますか！？", "other"), 3000);
+    function loadChat() {
+        messagesContainer.innerHTML = '';
+        let history = JSON.parse(localStorage.getItem(contacts[activeContact].storageKey)) || [];
+        history.forEach(msg => addMessage(msg.text, msg.type, activeContact, false));
+    }
+
+    // 運営からの自動返信チェック
+    function checkAdminReturn() {
+        const hasBought = localStorage.getItem('hasBoughtReturnA') === 'true';
+        const adminSent = localStorage.getItem('adminSentReturnA') === 'true';
+        
+        if (hasBought && !adminSent) {
+            addMessage("【HopeSeed運営】\nプロジェクト「娘の夢のための支援をお願いします。」へのご支援ありがとうございます。", "other", "admin");
+            addMessage("リターン品をご送付いたします。\n以下のURLよりご確認ください。\n\nhttps://yuda-6666.github.io/arg-site/return-a-dummy.html", "other", "admin");
+            localStorage.setItem('adminSentReturnA', 'true');
         }
+    }
+
+    // 初期化
+    window.onload = () => {
+        loadChat();
+        updateBadgeVisibility();
+
+        // まといの初期演出
+        let matoiHistory = JSON.parse(localStorage.getItem(contacts.matoi.storageKey)) || [];
+        if (matoiHistory.length === 0) {
+            setTimeout(() => addMessage("……すみません、見えてますか？", "other", "matoi"), 1000);
+            setTimeout(() => addMessage("HopeSeedの調査を手伝ってくれる方ですよね！？", "other", "matoi"), 2000);
+            setTimeout(() => addMessage("見えてたら何か返信くれますか！？", "other", "matoi"), 3000);
+        }
+
+        // 定期的にチェック
+        checkAdminReturn();
+        setInterval(checkAdminReturn, 3000);
     };
 
     function handleResponse(userText) {
-        if (currentSection === 0) {
-            saveSection(1);
-            setTimeout(() => addMessage("私、春風まといって言います！", "other"), 1000);
-            setTimeout(() => addMessage("もう聞いてるかもなんですが、とあるクラウドファンディングサイトの調査をしてほしくて！", "other"), 2000);
-            setTimeout(() => addMessage("これサイトのURLです！！", "other"), 3000);
-            setTimeout(() => addMessage('<a href="https://yuda-6666.github.io/arg-site/top.html" target="_blank">https://yuda-6666.github.io/arg-site/top.html</a>', "other"), 4000);
-        } else {
-            let response = "";
-            if (userText.includes("誰") || userText.includes("名前")) {
-                response = "春風まといだよ！好奇心旺盛な17歳😋\nサイトの調査、手伝ってくれて本当にありがとうね！";
-            } else if (userText.includes("怪しい") || userText.includes("サイト") || userText.includes("HopeSeed")) {
-                response = "あのサイト、絶対何か隠してると思うんだよね…。\n特に『娘の夢』のプロジェクト、支援者のコメント欄とかもチェックしてみて！";
+        if (activeContact === 'matoi') {
+            let currentSection = parseInt(localStorage.getItem('matoiSection')) || 0;
+            if (currentSection === 0) {
+                localStorage.setItem('matoiSection', 1);
+                setTimeout(() => addMessage("私、春風まといって言います！", "other"), 1000);
+                setTimeout(() => addMessage("もう聞いてるかもなんですが、とあるクラウドファンディングサイトの調査をしてほしくて！", "other"), 2000);
+                setTimeout(() => addMessage("これサイトのURLです！！", "other"), 3000);
+                setTimeout(() => addMessage('<a href="top.html" target="_blank">https://yuda-6666.github.io/arg-site/top.html</a>', "other"), 4000);
+                setTimeout(() => addMessage("正直どこも怪しいんですが、まずは「娘の夢をのための支援をお願いします。」ってプロジェクトの調査をお願いします！", "other"), 5500);
+                setTimeout(() => addMessage("一番安い￥1000のリターン品を貰ってみてください！大丈夫です！画面下から広告を見ればこのサイトで使えるポイントが貰えるみたいなので！", "other"), 7000);
+                setTimeout(() => addMessage("……でもこの広告、邪魔ですよね？なんとかならないかな……？", "other"), 8500);
+                setTimeout(() => addMessage("リターン品を見たら「見たよ」って教えてもらえますか？", "other"), 10000);
             } else {
-                response = "あはは、面白いこと言うね！✨\n何か不自然なところを見つけたら、すぐに教えてほしいな！";
+                let response = "";
+                if (userText.includes("誰") || userText.includes("名前")) {
+                    response = "春風まといだよ！好奇心旺盛な17歳😋\nサイトの調査、手伝ってくれて本当にありがとうね！";
+                } else if (userText.includes("怪しい") || userText.includes("サイト") || userText.includes("HopeSeed")) {
+                    response = "あのサイト、絶対何か隠してると思うんだよね…。\n特に『娘の夢』のプロジェクト、支援者のコメント欄とかもチェックしてみて！";
+                } else if (userText.includes("こんにちは")) {
+                    response = "こんにちは！今日も調査よろしくね！✨";
+                } else if (userText.includes("見たよ")) {
+                    response = "お！リターン品受け取れたんだね！✨\n何か変なところとかなかった？";
+                } else {
+                    response = "あはは、面白いこと言うね！✨\n何か不自然なところを見つけたら、すぐに教えてほしいな！";
+                }
+                setTimeout(() => addMessage(response, 'other'), 1000);
             }
-            setTimeout(() => addMessage(response, 'other'), 1000);
+        } else if (activeContact === 'admin') {
+            setTimeout(() => addMessage("お問い合わせありがとうございます。\n現在、順次対応しております。恐れ入りますが、回答まで今しばらくお待ちください。", "other", "admin"), 1000);
         }
     }
 

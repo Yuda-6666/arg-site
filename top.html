@@ -75,6 +75,7 @@
             padding: 15px;
             text-align: center;
             box-sizing: border-box;
+            cursor: pointer;
         }
 
         @media (max-width: 768px) {
@@ -284,35 +285,35 @@
         <section class="slider-section">
             <button class="carousel-btn prev" onclick="moveCarousel(-1)">&#10094;</button>
             <div class="carousel-container" id="carousel">
-                <div class="dummy-project">
+                <div class="dummy-project" onclick="showPopup('運営上の都合により、現在募集は中止しております。')">
                     <div class="project-image-placeholder">
                         <img src="./photo/project_1.png" alt="和菓子屋" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
                     </div>
-                    <div>街の伝統的な和菓子屋を守りたい</div>
+                    <div><strong>街の伝統的な和菓子屋を守りたい</strong></div>
                 </div>
-                <div class="dummy-project">
+                <div class="dummy-project" onclick="showPopup('募集期間が終了したため、現在募集は中止しております。')">
                     <div class="project-image-placeholder">
                         <img src="./photo/project_2.png" alt="アーティスト" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
                     </div>
-                    <div>若手アーティストの海外展覧会</div>
+                    <div><strong>若手アーティストの海外展覧会</strong></div>
                 </div>
-                <div class="dummy-project">
+                <div class="dummy-project" onclick="showPopup('目標金額を達成したため、現在募集は中止しております。')">
                     <div class="project-image-placeholder">
                         <img src="./photo/project_3.png" alt="保護猫" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
                     </div>
-                    <div>地域猫のための保護シェルター</div>
+                    <div><strong>地域猫のための保護シェルター</strong></div>
                 </div>
-                <div class="dummy-project">
+                <div class="dummy-project" onclick="showPopup('諸事情により、現在募集は中止しております。')">
                     <div class="project-image-placeholder">
                         <img src="./photo/project_4.png" alt="サッカー" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
                     </div>
-                    <div>地元の少年サッカーチーム遠征費</div>
+                    <div><strong>地元の少年サッカーチーム遠征費</strong></div>
                 </div>
-                <div class="dummy-project">
+                <div class="dummy-project" onclick="showPopup('あなたはもう選ばれています。')">
                     <div class="project-image-placeholder">
                         <img src="./photo/project_5.png" alt="植樹" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;">
                     </div>
-                    <div>植樹活動で森を再生したい</div>
+                    <div><strong>植樹活動で森を再生したい</strong></div>
                 </div>
             </div>
             <button class="carousel-btn next" onclick="moveCarousel(1)">&#10095;</button>
@@ -337,7 +338,7 @@
             </a>
 
             <!-- 案件B -->
-            <div class="project-card" onclick="showPopup('募集を中止いたしました。')">
+            <div class="project-card" onclick="showPopup('利用規約に反するため、募集を中止いたしました。')">
                 <div class="project-image" style="background-color: #e3f2fd;">
                     <img src="./photo/project_B.png" alt="保護動物" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
@@ -347,14 +348,14 @@
                     <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div>
                     <div class="project-stats">
                         <span>現在 ¥2,400,000</span>
-                        <span>100%</span>
+                        <span>106%</span>
                     </div>
                     <span class="supporter-count">支援者 412人</span>
                 </div>
             </div>
 
             <!-- 案件C -->
-            <div class="project-card" onclick="showPopup('利用規約に反するため、募集を中止いたしました。')">
+            <div class="project-card" onclick="showPopup('あなたは既に支援済みです。')">
                 <div class="project-image" style="background-color: #fff3e0;">
                     <img src="./photo/project_C.png" alt="廃校再生プロジェクト" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
@@ -363,10 +364,10 @@
                     <div class="project-title">廃校再生プロジェクト！廃校を次世代型&quot;共振&quot;施設へ！</div>
                     <div class="progress-bar"><div class="progress-fill" style="width: 112%; background-color: var(--accent-color);"></div></div>
                     <div class="project-stats">
-                        <span>現在 ¥5,600,000</span>
+                        <span>現在 ¥5,600,0000</span>
                         <span>112%</span>
                     </div>
-                    <span class="supporter-count">支援者 894人</span>
+                    <span class="supporter-count">支援者 1294人</span>
                 </div>
             </div>
         </div>
