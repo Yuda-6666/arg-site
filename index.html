@@ -364,11 +364,28 @@
     function checkAdminReturn() {
         const hasBought = localStorage.getItem('hasBoughtReturnA') === 'true';
         const adminSent = localStorage.getItem('adminSentReturnA') === 'true';
+        const amount = parseInt(localStorage.getItem('boughtAmountA')) || 0;
         
         if (hasBought && !adminSent) {
-            addMessage("【HopeSeed運営】\nプロジェクト「娘の夢のための支援をお願いします。」へのご支援ありがとうございます。", "other", "admin");
-            addMessage('リターン品をご送付いたします。\n以下のURLよりご確認ください。\n\n<a href="https://yuda-6666.github.io/arg-site/return/01_1000/message.pdf" target="_blank">https://yuda-6666.github.io/arg-site/return/01_1000/message.pdf</a>', "other", "admin");
-            localStorage.setItem('adminSentReturnA', 'true');
+            let pdfUrl = "";
+            let fileName = "";
+            
+            if (amount === 1000) {
+                pdfUrl = "https://yuda-6666.github.io/arg-site/return/01_1000/message.pdf";
+                fileName = "感謝のメッセージ";
+            } else if (amount === 10000) {
+                pdfUrl = "https://yuda-6666.github.io/arg-site/return/02_10000/dairy.pdf";
+                fileName = "ゆらのプライベート写真(後ろ姿のみ)";
+            } else if (amount === 80000) {
+                pdfUrl = "https://yuda-6666.github.io/arg-site/return/03_80000/photo.pdf";
+                fileName = "ゆらの秘密の日記";
+            }
+
+            if (pdfUrl) {
+                addMessage("【HopeSeed運営】\nプロジェクト「娘の夢のための支援をお願いします。」へのご支援ありがとうございます。", "other", "admin");
+                addMessage(`リターン品（${fileName}）をご送付いたします。\n以下のURLよりご確認ください。\n\n<a href="${pdfUrl}" target="_blank">${pdfUrl}</a>`, "other", "admin");
+                localStorage.setItem('adminSentReturnA', 'true');
+            }
         }
     }
 

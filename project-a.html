@@ -314,16 +314,16 @@
                 <button class="support-btn" style="padding: 8px; font-size: 14px;" onclick="supportProject(1000)">このリターンを選択する</button>
             </div>
             <div class="return-card">
-                <div class="return-price">¥5,000</div>
-                <div class="return-title">ゆらのプライベート写真</div>
-                <p>家での練習風景など、ここでしか見られないゆらの未公開写真（デジタルデータ）を3枚お送りします。</p>
-                <button class="support-btn" style="padding: 8px; font-size: 14px;" onclick="supportProject(5000)">このリターンを選択する</button>
+                <div class="return-price">10,000</div>
+                <div class="return-title">ゆらのプライベート写真(後ろ姿のみ)</div>
+                <p>家での練習風景など、ここでしか見られないゆらの未公開写真（デジタルデータ）を4枚お送りします。</p>
+                <button class="support-btn" style="padding: 8px; font-size: 14px;" onclick="supportProject(10000)">このリターンを選択する</button>
             </div>
             <div class="return-card">
-                <div class="return-price">¥10,000</div>
+                <div class="return-price">¥80,000</div>
                 <div class="return-title">ゆらの秘密の日記</div>
-                <p>ゆらが毎日綴っている日記の中から、一週間分の内容を抜粋してお送りします。彼女の「本当の気持ち」に触れてみてください。</p>
-                <button class="support-btn" style="padding: 8px; font-size: 14px;" onclick="supportProject(10000)">このリターンを選択する</button>
+                <p>ゆらが毎日綴っている日記の中から、一部の内容を抜粋してお送りします。彼女の「本当の気持ち」に触れてみてください。</p>
+                <button class="support-btn" style="padding: 8px; font-size: 14px;" onclick="supportProject(80000)">このリターンを選択する</button>
             </div>
         </div>
 
@@ -408,8 +408,9 @@
                     money = currentMoney;
                     updateMoneyDisplay();
                     
-                    // 購入フラグをセット
+                    // 購入フラグと金額をセット
                     localStorage.setItem('hasBoughtReturnA', 'true');
+                    localStorage.setItem('boughtAmountA', amount);
                     
                     alert("チャットにてリターン品をお送りしましたのでご確認ください");
                 } else {
