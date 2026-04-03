@@ -280,7 +280,7 @@
                         <div class="stat-label">残り日数</div>
                         <div class="stat-value">12<small>日</small></div>
                     </div>
-                    <button class="support-btn" onclick="alert('支援するにはログインが必要です。')">このプロジェクトを支援する</button>
+                    <button class="support-btn" onclick="openTab(null, 'returns')">このプロジェクトを支援する</button>
                 </div>
             </div>
         </div>
@@ -356,7 +356,7 @@
                 <div class="comment-meta">支援者：佐藤 | ¥5,000 | 5時間前</div>
                 <div class="comment-text">素敵な親子愛ですね。微力ながら応援させていただきます。</div>
             </div>
-            <div class="comment-item suspicious">
+            <div class="comment-item">
                 <div class="comment-meta">支援者：通りすがり | ¥1,000 | 1日前</div>
                 <div class="comment-text">鏡森ゆらさんって……去年のあの事件の被害者じゃないんですか？同姓同名の別人……？</div>
             </div>
@@ -364,9 +364,9 @@
                 <div class="comment-meta">支援者：田中 | ¥1,000 | 1日前</div>
                 <div class="comment-text">ゆらちゃんの歌声、大好きでした。また聴けるなんて夢みたいです。</div>
             </div>
-            <div class="comment-item suspicious">
+            <div class="comment-item">
                 <div class="comment-meta">支援者：近隣住民 | ¥1,000 | 2日前</div>
-                <div class="comment-text">お父さん、大丈夫ですか？鏡森さんのお宅、もう一年以上も静まり返っているはずですが……</div>
+                <div class="comment-text">同じ父親として頭が下がる思いです。少ないですが支援させていただきます。</div>
             </div>
             <div class="comment-item">
                 <div class="comment-meta">支援者：yumi | ¥5,000 | 3日前</div>
@@ -432,7 +432,18 @@
             }
             document.getElementById(tabName).style.display = "block";
             document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.className += " active";
+
+            if (evt) {
+                evt.currentTarget.className += " active";
+            } else {
+                // evtがない場合（ボタン等からの呼び出し）、対象のタブをアクティブにする
+                for (i = 0; i < tablinks.length; i++) {
+                    if (tablinks[i].getAttribute('onclick').includes("'" + tabName + "'")) {
+                        tablinks[i].className += " active";
+                        break;
+                    }
+                }
+            }
         }
 
         // ダミーコメント生成
