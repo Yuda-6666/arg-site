@@ -142,14 +142,17 @@
             border-bottom: 2px solid #eee;
             margin-top: 40px;
             margin-bottom: 20px;
+            overflow-x: auto; /* スマホではみ出た場合に横スクロールさせる */
+            -webkit-overflow-scrolling: touch;
         }
 
         .tab {
-            padding: 15px 25px;
+            padding: 15px 20px; /* 余白を少し調整 */
             cursor: pointer;
             font-weight: bold;
             color: #666;
             white-space: nowrap;
+            flex-shrink: 0; /* タブが潰れないようにする */
         }
 
         .tab.active {
