@@ -78,6 +78,30 @@
             cursor: pointer;
             font-weight: bold;
         }
+
+        /* 広告オーバーレイ */
+        .ad-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ad-close {
+            display: none;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -132,14 +156,31 @@
         </div>
     </div>
 
+    <!-- 広告オーバーレイ -->
+    <div id="ad-overlay" class="ad-overlay">
+        <div id="ad-close" class="ad-close" onclick="closeAd()">×</div>
+        <img src="photo/ad01.png" alt="広告" style="max-width: 90%; max-height: 90%;">
+    </div>
+
     <script>
         let money = parseInt(localStorage.getItem('hopeSeedMoney')) || 0;
         updateMoneyDisplay();
 
         function watchAd() {
+            const overlay = document.getElementById('ad-overlay');
+            const closeBtn = document.getElementById('ad-close');
+            overlay.style.display = 'flex';
+            closeBtn.style.display = 'none';
+            setTimeout(() => {
+                closeBtn.style.display = 'block';
+            }, 5000);
+        }
+
+        function closeAd() {
             money += 1000;
             localStorage.setItem('hopeSeedMoney', money);
             updateMoneyDisplay();
+            document.getElementById('ad-overlay').style.display = 'none';
         }
 
         function updateMoneyDisplay() {
