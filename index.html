@@ -428,8 +428,12 @@
                     response = "あのサイト、絶対何か隠してると思うんだよね…。\n特に『娘の夢』のプロジェクト、支援者のコメント欄とかもチェックしてみて！";
                 } else if (userText.includes("こんにちは")) {
                     response = "こんにちは！今日も調査よろしくね！✨";
-                } else if (userText.includes("見たよ")) {
-                    response = "お！リターン品受け取れたんだね！✨\n何か変なところとかなかった？";
+                } else if (userText.includes("見た") || userText.includes("みた")) {
+                    setTimeout(() => addMessage("¥1000はメッセージみたいですね。\n1番安いから大したことは分かりませんね。", "other"), 1000);
+                    setTimeout(() => addMessage("次は¥10000なんですが……「広告見るの面倒だな～」って思いましたよね！？", "other"), 2500);
+                    setTimeout(() => addMessage("HS_MATOI_8989", "other"), 4000);
+                    setTimeout(() => addMessage("↑を「コードはこちらに入力」のところから入れてみてください！捜査資金です！", "other"), 5500);
+                    setTimeout(() => addMessage("これで一番高いリターンまで見られますね！", "other"), 7000);
                 } else {
                     response = "あはは、面白いこと言うね！✨\n何か不自然なところを見つけたら、すぐに教えてほしいな！";
                 }

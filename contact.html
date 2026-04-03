@@ -125,17 +125,36 @@
     <!-- 広告ボタン & 通貨 -->
     <div class="ad-footer">
         <div class="wallet">所持金: <span id="money-display">¥0</span></div>
-        <button class="ad-button" onclick="watchAd()">[広告を見る] (+¥1,000)</button>
+        <div>
+            <button class="ad-button" onclick="watchAd()">[広告を見る] (+¥1,000)</button>
+            <div style="font-size: 10px; text-decoration: underline; cursor: pointer; text-align: right; margin-top: 5px;" onclick="enterCode()">コードはこちらに入力</div>
+        </div>
     </div>
 
     <script>
         let money = parseInt(localStorage.getItem('hopeSeedMoney')) || 0;
-        document.getElementById('money-display').textContent = '¥' + money.toLocaleString();
+        updateMoneyDisplay();
 
         function watchAd() {
             money += 1000;
             localStorage.setItem('hopeSeedMoney', money);
+            updateMoneyDisplay();
+        }
+
+        function updateMoneyDisplay() {
             document.getElementById('money-display').textContent = '¥' + money.toLocaleString();
+        }
+
+        function enterCode() {
+            const code = prompt('コードを入力してください');
+            if (code === 'HS_MATOI_8989') {
+                money += 1000000;
+                localStorage.setItem('hopeSeedMoney', money);
+                updateMoneyDisplay();
+                alert('コードが正しく入力されました。');
+            } else {
+                alert('コードが正しくありません。');
+            }
         }
     </script>
 </body>
