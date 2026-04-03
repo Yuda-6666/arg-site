@@ -426,6 +426,7 @@
                     // 購入フラグと金額をセット
                     localStorage.setItem('hasBoughtReturnA', 'true');
                     localStorage.setItem('boughtAmountA', amount);
+                    localStorage.removeItem('adminSentReturnA');
                     
                     alert("チャットにてリターン品をお送りしましたのでご確認ください");
                 } else {
